@@ -22,3 +22,12 @@
 *.i*86
 *.x86_64
 *.hex
+
+# Project specific files
+map
+lexicon
+invlists
+index
+search
+keys
+src/test/*
