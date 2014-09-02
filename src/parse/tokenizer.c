@@ -87,73 +87,7 @@ struct tag *read_tag(char *buffer) {
 /*
  Map tokens to logical document ID
  */
-int tokenize(struct tokenlist **tokens, char *buffer, uint32_t id, int print) {
-  char *word;
-
-  // Separators. Don't split on single quotes.
-  while ((word = strsep(&buffer, "\\,.?/:;=-()[]{}\'\" \n\t")) != NULL) {
-    struct tokenlist *tok = malloc(sizeof(struct tokenlist));
-    struct tokenlist *tmp = malloc(sizeof(struct tokenlist));
-    struct token *doc = malloc(sizeof(struct token));
-    struct token *del = malloc(sizeof(struct token));
-
-    if (strlen(word) > 0) {
-      // this shouldn't be necessary, but for some reason
-      // tags are sent to be tokenized by the parser
-      if (word[0] == '<') {
-        return 1;
-      }
-
-      for (int i = 0; i < strlen(word); i++) {
-        word[i] = tolower(word[i]);
-      }
-
-      // Find our tokenized word, dump into tmp table
-      HASH_FIND_STR(*tokens, word, tmp);
-      /* If tmp table is empty, then word hasn't
-       * been added to our token list yet. Initialise
-       * a new token entry in our token list.
-       */
-      if (tmp == NULL) {
-        // Initialize nested hash table
-        tok->document = NULL;
-
-        // Set nested hash table fields
-        doc->id = id;
-        doc->count = 1;
-
-        // Assign token and nested metadata
-        // Add local hash table entry to global
-        tok->token = word;
-        HASH_ADD_INT(tok->document, id, doc);
-        HASH_ADD_STR(*tokens, token, tok);
-      } else {
-        HASH_FIND_INT(tmp->document, &id, doc);
-
-        doc->count += 1;
-
-        printf("Token \"%s\" has count %u in ID %u\n", word, doc->count, doc->id);
-        HASH_REPLACE_INT(tmp->document, id, doc, del);
-        HASH_REPLACE_STR(*tokens, token, tmp, tok);
-
-        free(tok);
-        free(del);
-      }
-
-      if (print) {
-        //printf("Found %d occurence of token %s\n", tok->document.count +1, word);
-        printf("%s\n", word);
-      }
-    }
-  }
-
-  return 0;
-}
-
-/*
- Map tokens to logical document ID with stopwords filter
- */
-int tokenize_stoplist(struct tokenlist **tokens, struct stoplist **stopwords, char *buffer, uint32_t id, int print) {
+int tokenize(struct tokenlist **tokens, struct stoplist **stopwords, char *buffer, uint32_t id, int print, int stop) {
   char *word;
 
   // Separators. Don't split on single quotes.
@@ -177,17 +111,27 @@ int tokenize_stoplist(struct tokenlist **tokens, struct stoplist **stopwords, ch
       }
 
       // Prune stopwords
-      if (stoplist_find(stopwords, word)) {
-        return 1;
+      if (stop) {
+        if (stoplist_find(stopwords, word)) {
+          return 1;
+        }
       }
 
-      // Check if exists so we can INCR counter
+      // Find our tokenized word, dump into tok table
       HASH_FIND_STR(*tokens, word, tok);
+      /* If tmp table is empty, then word hasn't
+       * been added to our token list yet. Initialise
+       * a new token entry in our token list.
+       */
       if (tok == NULL) {
+      // Assign token and nested metadata
+      // Add local hash table entry to global
         tok = malloc(sizeof(struct tokenlist));
         tok->document = NULL;
         tok->token = word;
 
+        // Initialize nested hash table
+        // Set nested hash table fields
         doc = malloc(sizeof(struct token));
         doc->id = id;
         doc->count = 1;

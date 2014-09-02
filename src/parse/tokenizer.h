@@ -45,5 +45,4 @@ token[
 token[][char *string[], int id]
 token[...][2]
 */
-int tokenize(struct tokenlist **tokens, char *buffer, uint32_t id, int print);
-int tokenize_stoplist(struct tokenlist **tokens, struct stoplist **stopwords, char *buffer, uint32_t id, int print);
+int tokenize(struct tokenlist **tokens, struct stoplist **stopwords, char *buffer, uint32_t id, int print, int stop);

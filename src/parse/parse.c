@@ -108,9 +108,9 @@ int main(int argc, char *argv[]) {
         } else {
           if (open) {
             if (stopfile != NULL) {
-              tokenize_stoplist(&tokens, &stopwords, buffer, logical_id, print);
+              tokenize(&tokens, &stopwords, buffer, logical_id, print, 1);
             } else {
-              tokenize(&tokens, buffer, logical_id, print);
+              tokenize(&tokens, NULL, buffer, logical_id, print, 0);
             }
           }
         }
