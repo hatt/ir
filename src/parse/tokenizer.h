@@ -12,28 +12,6 @@ struct tag {
   int  state;
 };
 
-/*
- * ID    - the logical ID of the document the token appears in
- * Count - the number of appearances of the token in the current document
- */
-struct token {
-  uint32_t id;
-  uint32_t count;
-  UT_hash_handle hh;
-};
-
-/*
- * Token       - the token name
- * Document    - the hash table of document metadata for the token
- * Hash Handle - the cursor for the hash table
- */
-struct tokenlist {
-  char           *token;
-  struct token   *document;
-  UT_hash_handle hh;
-};
-
-
 struct tag *read_tag(char *buffer);
 
 /*

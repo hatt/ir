@@ -4,6 +4,7 @@
 #include <string.h>
 #include <ctype.h>
 
+#include "../common.h"
 #include "tokenizer.h"
 
 struct tag *read_tag(char *buffer) {

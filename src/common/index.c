@@ -15,10 +15,10 @@ uint32_t index_token(FILE *index, struct tokenlist *token) {
   fwrite(&length, 4, 1, index);
 
   // Iterate documents for token
-  HASH_ITER(hh, token->document, document, *tmp) {
+  HASH_ITER(hh, token->document, document, tmp) {
     // Write id,count pairs to index
-    fwrite(document->id, 4, 1, index);
-    fwrite(document->count, 4, 1, index);
+    fwrite(&document->id, 4, 1, index);
+    fwrite(&document->count, 4, 1, index);
 
     // Cleanup
     HASH_DEL(token->document, document);
