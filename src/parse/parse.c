@@ -44,33 +44,19 @@ int main(int argc, char *argv[]) {
     stoplist_init(&stopwords, stopfile);
   }
 
-  // map documents to logical IDs and tokenize each document
+  // Open file with content to index
   input = fopen(sourcefile, "r");
   if (!input) {
-    printf("Error opening index file: %s\n", sourcefile);
+    printf("Error opening source file: %s\n", sourcefile);
     return 1;
   }
 
+  // Map documents to logical IDs and tokenize each document
   FILE *mapfile = fopen("map", "wb");
   if (!mapfile) {
     printf("Error opening map file\n");
     return 1;
   }
-
-  FILE *lexfile = fopen("lexicon", "wb");
-  if (!lexfile) {
-    printf("Error opening lexicon file\n");
-    return 1;
-  }
-
-  FILE *indexfile = fopen("invlists", "wb");
-  if (!indexfile) {
-    printf("Error opening inverted lists file\n");
-    return 1;
-  }
-
-  // create index trie
-  struct trie *trie = NULL;
 
   char buffer[256]; // this really only needs to be 80 for the index file
   while(fgets(buffer, sizeof(buffer), input) != NULL) {
@@ -120,13 +106,35 @@ int main(int argc, char *argv[]) {
 
   free(stopwords);
 
-  // construct lexicon radix trie
-  // open index file
-  // iterate tokens hash table
-  // write document count for token - HASH_COUNT(token->document)
-  // write <id, count> pairs for document
-  // free token
-  // write token and offset for <count, <id, count>> groups to lexicon trie
+  FILE *lexfile = fopen("lexicon", "wb");
+  if (!lexfile) {
+    printf("Error opening lexicon file\n");
+    return 1;
+  }
+
+  FILE *indexfile = fopen("invlists", "wb");
+  if (!indexfile) {
+    printf("Error opening inverted lists file\n");
+    return 1;
+  }
+
+  // Construct lexicon trie
+  //struct trie *trie = NULL;
+  //lexicon_init()
+
+  // Iterate tokens hash table
+  struct tokenlist *token, *tmp;
+  HASH_ITER(hh, tokens, token, tmp) {
+    // Add token and index pointer to lexicon
+    uint32_t offset = index_token(indexfile, token);
+
+    //lexicon_add(lexicon, token->token, offset);
+
+    // Cleanup
+    HASH_DEL(tokens, token);
+    free(token);
+  }
+
   fclose(indexfile);
   free(tokens);
   // write lexicon
