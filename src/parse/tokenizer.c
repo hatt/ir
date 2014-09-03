@@ -113,7 +113,7 @@ int tokenize(struct tokenlist **tokens, struct stoplist **stopwords, char *buffe
       // Prune stopwords
       if (stop) {
         if (stoplist_find(stopwords, word)) {
-          return 1;
+          continue;
         }
       }
 
