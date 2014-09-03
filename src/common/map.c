@@ -27,7 +27,7 @@ char *unmap_document(struct mapping **map, uint32_t id) {
 }
 
 // Rebuild the mapping hash table from disk
-int load_map(FILE *mapfile, struct mapping **map) {
+int map_init(FILE *mapfile, struct mapping **map) {
   // Read x bytes of our dumped binary structure
   // First 4 bytes are the unsigned integer for logical ID
   // Next 13 bytes are the character array for document ID
