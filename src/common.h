@@ -62,6 +62,8 @@ void trie_delete(struct trie **trie, char *key);
 // Functions for lexicon
 void lexicon_init(struct trie *lexicon, FILE *input);
 void lexicon_add(struct trie *lexicon, char *key, uint32_t value);
+void lexicon_dump(FILE *output, struct trie *lexicon);
+uint32_t lexicon_find(struct trie *lexicon, char *key);
 
 // Functions for index
 uint32_t index_token(FILE *index, struct tokenlist *token);
