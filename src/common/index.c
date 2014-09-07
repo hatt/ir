@@ -6,6 +6,7 @@
 #include "../common.h"
 #include "../uthash.h"
 
+// Take a token hash table entry, iterate documents, and write to index
 uint32_t index_token(FILE *index, struct tokenlist *token) {
   struct token *document, *tmp;
   uint32_t offset = ftell(index);
@@ -29,4 +30,20 @@ uint32_t index_token(FILE *index, struct tokenlist *token) {
   return offset;
 }
 
-void index_find(FILE *index, uint32_t offset, struct tokenlist *tokens) {}
+// Read data at position offset in index and write to tokens hash table
+void index_find(FILE *index, uint32_t offset, struct token **token) {
+  fseek(index, offset, SEEK_SET);
+
+  // Read number of id,count pairs
+  uint32_t length;
+  fread(&length, 4, 1, index);
+
+  // For each pair, read the ID and count into the tokenlist
+  for (int i = 0; i < length; i++) {
+    struct token *document = malloc(sizeof(struct token));
+    fread(&document->id, 4, 1, index);
+    fread(&document->count, 4, 1, index);
+
+    HASH_ADD_INT(*token, id, document);
+  }
+}
