@@ -119,8 +119,8 @@ int main(int argc, char *argv[]) {
   }
 
   // Construct lexicon trie
-  //struct trie *trie = NULL;
-  //lexicon_init()
+  struct trie *lexicon = NULL;
+  lexicon_init(lexicon, NULL);
 
   // Iterate tokens hash table
   struct tokenlist *token, *tmp;
@@ -128,7 +128,7 @@ int main(int argc, char *argv[]) {
     // Add token and index pointer to lexicon
     uint32_t offset = index_token(indexfile, token);
 
-    //lexicon_add(lexicon, token->token, offset);
+    lexicon_add(lexicon, token->token, offset);
 
     // Cleanup
     HASH_DEL(tokens, token);
