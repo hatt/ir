@@ -1,6 +1,6 @@
-#import <stdio.h>
-#import <stdlib.h>
-#import <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
 
 #include "../common.h"
 #include "../uthash.h"
@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
   struct mapping *map = NULL;
   map_init(mapfile, &map);
   fclose(mapfile);
-  
+
   // For each query word, search in index
   for (int i = 0; i < sizeof(*queries); i++) {
     // Apply tokenizer rules to each query
