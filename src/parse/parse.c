@@ -127,8 +127,11 @@ int main(int argc, char *argv[]) {
   HASH_ITER(hh, tokens, token, tmp) {
     // Add token and index pointer to lexicon
     uint32_t offset = index_token(indexfile, token);
+    uint32_t length = strlen(token->token) + 4;
 
-    lexicon_add(lexicon, token->token, offset);
+    fwrite(&length, 4, 1, lexfile);
+    fwrite(token->token, strlen(token->token), 1, lexfile);
+    fwrite(&offset, 4, 1, lexfile);
 
     // Cleanup
     HASH_DEL(tokens, token);
@@ -137,8 +140,6 @@ int main(int argc, char *argv[]) {
 
   fclose(indexfile);
   free(tokens);
-  // write lexicon
-  // close lexicon
 
   fclose(lexfile);
   fclose(mapfile);
