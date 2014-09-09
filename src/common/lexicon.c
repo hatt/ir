@@ -24,19 +24,17 @@ void lexicon_init(struct trie *lexicon, FILE *input) {
       lexicon_add(lexicon, key, value);
     }
   }
+
+  return;
 }
 
 // Add a token to the lexicon
 void lexicon_add(struct trie *lexicon, char *key, uint32_t value) {
   trie_add(&lexicon, key, value);
-}
-
-void lexicon_dump(FILE *output, struct trie *lexicon) {
-  //trie_iterate(lexicon) {
-
-  //}
+  return;
 }
 
 uint32_t lexicon_find(struct trie *lexicon, char *key) {
-
+  struct trie *term = trie_find(lexicon, key);
+  return term->value;
 }

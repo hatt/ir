@@ -135,6 +135,3 @@ void trie_add(struct trie **root, char *key, uint32_t value) {
     return;
   }
 }
-
-// Remove a node from a root
-void trie_delete(struct trie **trie, char *key) {}
